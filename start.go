@@ -13,7 +13,8 @@ func add(x, y int) int {
 }
 
 //定义变量
-
+var a, b int = 3, 4
+//var c, python, java bool
 
 //变量类型转换
 var (
@@ -31,5 +32,5 @@ func main() {
 	fmt.Println(math.Pi)
 	fmt.Println("My favorite number is", rand.Intn(10))
 	fmt.Println(add(42, 13))
-	fmt.Println(i, c, python, java, u, name)
+	fmt.Println(i, c, python, java, u, name, a, b)
 }
