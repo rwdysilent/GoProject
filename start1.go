@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 func foo() int {
@@ -47,4 +48,6 @@ func main()  {
 	fmt.Println(v.X)
 
 	fmt.Println(Vertex1{4})
+
+	fmt.Println(math.Sqrt(25))
 }
