@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"regexp"
 )
 
 //func Append(slice, data []byte) []byte {
@@ -230,12 +231,21 @@ func do(work *Work) {
 }
 
 func main() {
-	type Work string
-	//Work := "hello"
-	v := Work("hello")
-	fmt.Println(v)
-	//workChan := make(chan *Work)
-	//str := "hello"
-	//workChan <- &str
-	//server(workChan)
+	//a := regexp.MustCompile("a")
+	//fmt.Println(a.Split("banana", -1))
+	//fmt.Println(a.Split("banana", 0))
+	//fmt.Println(a.Split("banana", 1))
+	//fmt.Println(a.Split("banana", 2))
+	//zp := regexp.MustCompile("z+")
+	//fmt.Println(zp.Split("pizza", -1))
+	//fmt.Println(zp.Split("pizza", 0))
+	//fmt.Println(zp.Split("pizza", 1))
+	//fmt.Println(zp.Split("pizza", 2))
+
+	str := "/playlist?id=965267769"
+	s := regexp.MustCompile("\\?id=")
+	ans := s.Split(str, 2)
+	m_sli := make([]string, 0)
+	m_sli = append(m_sli, ans[1])
+	fmt.Println(ans[1], m_sli, len(m_sli))
 }
