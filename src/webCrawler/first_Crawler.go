@@ -9,7 +9,8 @@ import (
 	"log"
 	_ "go/doc"
 	"regexp"
-	"reflect"
+	_ "reflect"
+	"encoding/json"
 )
 
 func getUrl(url string) (content string, status int) {
@@ -67,6 +68,7 @@ func music_163_search(s, m_url string) (content string){
 	return
 }
 
+//获取歌单id
 func getSongListId() (slice []string){
 	m_url := "http://music.163.com/discover/playlist/?order=hot&cat=全部&limit=5&offset=1"
 
@@ -92,6 +94,7 @@ func getSongListId() (slice []string){
 	return id_slice
 }
 
+//获取歌单中歌曲id
 func getSongId() (slice []string){
 	m_url := "http://music.163.com/api/playlist/detail?id=965267769&updateTime=-1"
 	doc, err := goquery.NewDocument(m_url)
@@ -99,7 +102,34 @@ func getSongId() (slice []string){
 		fmt.Println(err)
 	}
 	Html := doc.Text()
-	fmt.Println(reflect.TypeOf(Html))
+	//fmt.Println(Html)
+
+	SongIdJsonConvertMap(Html)
+	return
+}
+
+//歌单id json数据转换map
+func SongIdJsonConvertMap(jsonString string) (SongName, SongId string){
+	var SongMapInfo map[string]interface{}
+
+	SongJson := []byte(jsonString)
+	if err := json.Unmarshal(SongJson, &SongMapInfo); err != nil{
+		panic(err)
+	}
+	//fmt.Println(SongMapInfo)
+
+	//get slice for song info
+	lenTracks := len(SongMapInfo["result"].(map[string]interface{})["tracks"].([]interface{}))
+
+	//fmt.Println(lenTracks)
+
+	for i := 0; i < lenTracks; i++{
+		SongName := SongMapInfo["result"].(map[string]interface{})["tracks"].([]interface{})[i].(map[string]interface{})["name"]
+		floatId := SongMapInfo["result"].(map[string]interface{})["tracks"].([]interface{})[i].(map[string]interface{})["id"].(float64)
+		SongId := int(floatId)
+
+		fmt.Println(SongName, SongId)
+	}
 
 	return
 }
