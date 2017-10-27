@@ -11,6 +11,9 @@ import (
 	"regexp"
 	_ "reflect"
 	"encoding/json"
+	"crypto/aes"
+	"os"
+	"crypto/cipher"
 )
 
 func getUrl(url string) (content string, status int) {
@@ -68,6 +71,38 @@ func music_163_search(s, m_url string) (content string){
 	return
 }
 
+//获取歌曲热度评论
+func get_hot_comment(id string){
+	url := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + id + "/?csrf_token="
+	params := get_params()
+	return
+}
+
+var forth_param string = "0CoJUm6Qyw8W8jud"
+var commonIV = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
+
+func get_params() (h_encText string){
+	iv := commonIV
+	first_key := forth_param
+	second_key := 16 * 'F'
+
+	//创建加密算法
+	c, err := aes.NewCipher([]byte(first_key))
+    if err != nil {
+        fmt.Printf("Error: NewCipher(%d bytes) = %s", len(first_key), err)
+        os.Exit(-1)
+    }
+	//加密字符串
+	cfb := cipher.NewCFBEncrypter(c, iv)
+    ciphertext := make([]byte, len(plaintext))
+    cfb.XORKeyStream(ciphertext, plaintext)
+    fmt.Printf("%s=>%x\n", plaintext, ciphertext)
+
+	h_encText := aes.NewCipher(first_param, first_key, iv)
+	h_encText := AES_encrypt(h_encText, second_key, iv)
+	return
+}
+
 //获取歌单id
 func getSongListId() (slice []string){
 	m_url := "http://music.163.com/discover/playlist/?order=hot&cat=全部&limit=5&offset=1"
@@ -120,8 +155,6 @@ func SongIdJsonConvertMap(jsonString string) (SongName, SongId string){
 
 	//get slice for song info
 	lenTracks := len(SongMapInfo["result"].(map[string]interface{})["tracks"].([]interface{}))
-
-	//fmt.Println(lenTracks)
 
 	for i := 0; i < lenTracks; i++{
 		SongName := SongMapInfo["result"].(map[string]interface{})["tracks"].([]interface{})[i].(map[string]interface{})["name"]
