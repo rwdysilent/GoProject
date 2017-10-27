@@ -73,8 +73,10 @@ func music_163_search(s, m_url string) (content string){
 
 //获取歌曲热度评论
 func get_hot_comment(id string){
-	url := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + id + "/?csrf_token="
+	comment_url := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + id + "/?csrf_token="
 	params := get_params()
+
+	fmt.Println(comment_url, params)
 	return
 }
 
