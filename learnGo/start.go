@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
 	"math"
+	"math/rand"
 	"runtime"
 	"time"
 )
@@ -16,17 +16,18 @@ func add(x, y int) int {
 
 //定义变量
 var a, b int = 3, 4
+
 //var c, python, java bool
 
 //变量类型转换
 var (
-	i int = 42
+	i int     = 42
 	f float64 = float64(i)
-	u uint = uint(f)
+	u uint    = uint(f)
 )
 
 //常量定义
-const name  = "world"
+const name = "world"
 
 func main() {
 	//:= 结构不能使用在函数外

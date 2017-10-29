@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
-	"sort"
 	"regexp"
+	"sort"
 )
 
 //func Append(slice, data []byte) []byte {
@@ -123,7 +123,7 @@ func (s Sequence) String() string {
 
 type myInteger int
 
-func(p myInteger) get() int{
+func (p myInteger) get() int {
 	return int(p)
 } // Conversion required.
 
@@ -131,22 +131,21 @@ func f1(i myInteger) myInteger {
 	return i
 }
 
-func f2(i int) float64{
+func f2(i int) float64 {
 	return float64(i)
 }
 
 var v myInteger
 
-
-type myType struct { i int }
+type myType struct{ i int }
 
 func (p *myType) get() int { return p.i }
 
 func (p *myType) set(i int) { p.i = i + 3 }
 
 type myInterface interface {
-          get() int
-          set(i int)
+	get() int
+	set(i int)
 }
 
 func getAndSet(x myInterface) int {
@@ -163,7 +162,7 @@ func ff() int {
 
 type myChildType struct {
 	myType
-	j	int
+	j int
 }
 
 func (p *myChildType) get() int {
@@ -173,10 +172,10 @@ func (p *myChildType) get() int {
 	return p.myType.get()
 }
 
-func ff2() (int, int){
+func ff2() (int, int) {
 	//var p myChildType
 	//q := myType{1}
-	p := myChildType{myType{1},2}
+	p := myChildType{myType{1}, 2}
 	a := getAndSet(&p)
 	return a, p.j
 }
@@ -186,18 +185,18 @@ func ff2() (int, int){
 func echoString() {
 	var str interface{}
 	//str := 1
-    //result, _ := content.(string)  //通过断言实现类型转换
+	//result, _ := content.(string)  //通过断言实现类型转换
 	if i, ok := str.(string); ok {
 		fmt.Println(i)
-	}else {
+	} else {
 		fmt.Printf("Err: %T-->%v\n", str, str)
 	}
 }
 
 type Request struct {
-	args        []int
-	f           func([]int) int
-	resultChan  chan int
+	args       []int
+	f          func([]int) int
+	resultChan chan int
 }
 
 func sum(a []int) (s int) {

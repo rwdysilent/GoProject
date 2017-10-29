@@ -7,8 +7,8 @@ func fibonacci() func() int {
 	x := 0
 	y := 1
 	z := 0
-	return func() int{
-		z, x ,y = x, y, x+y
+	return func() int {
+		z, x, y = x, y, x+y
 		return z
 	}
 }

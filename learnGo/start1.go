@@ -11,12 +11,12 @@ func foo() int {
 	return x + y
 }
 
-func foo1(x, y int) int  {
+func foo1(x, y int) int {
 	return x + y
 }
 
 //多指返回
-func foo2(x, y int) (a, b int){
+func foo2(x, y int) (a, b int) {
 	a = x
 	b = y
 	return
@@ -32,7 +32,7 @@ type Vertex1 struct {
 	Z int
 }
 
-func main()  {
+func main() {
 	//
 	fmt.Println(foo())
 	//

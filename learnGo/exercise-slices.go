@@ -13,11 +13,11 @@ func Pic(dx, dy int) [][]uint8 {
 	for i := range a {
 		for j := range a[i] {
 			switch {
-			case j % 15 == 0:
+			case j%15 == 0:
 				a[i][j] = 240
-			case j % 3 == 0:
+			case j%3 == 0:
 				a[i][j] = 120
-			case j % 5 == 0:
+			case j%5 == 0:
 				a[i][j] = 150
 			default:
 				a[i][j] = 100
