@@ -71,37 +71,67 @@ func music_163_search(s, m_url string) (content string) {
 }
 
 //获取歌曲热度评论
-func get_hot_comment(id string) {
+func get_hot_comment(id string) (string) {
 	comment_url := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + id + "/?csrf_token="
-	params := get_params()
+	fmt.Println(comment_url)
+	params := "O5/yxckUkfK03FP34r7bgJVnmX5k2/G/l+JCIrgOQwzIIaSLS4Whg5hM1NqjOg7Q8fUC73m3WAcoCTPlNUrAVcycdW/bHEENz/Od0HbqY48y98a5kdtGtQCEDPQo2J5G"
+	encSecKey := "257348aecb5e556c066de214e531faadd1c55d814f9be95fd06d6bff9f4c7a41f831f6394d5a3fd2e3881736d94a02ca919d952872e7d0a50ebfa1769a7a62d512f5f1ca21aec60bc3819a9c3ffca5eca9a0dba6d6f7249b06f5965ecfff3695b54e1c28f3f624750ed39e7de08fc8493242e26dbc4484a01c76f739e135637c"
 
-	fmt.Println(comment_url, params)
-	return
+	resp, err := http.PostForm(comment_url, url.Values{"params": {params}, "encSecKey": {encSecKey}})
+	resp.Header.Set("Cookie", "appver=1.5.0.75771;")
+	resp.Header.Set("Referer", "http://music.163.com/")
+
+	if err != nil{
+		fmt.Printf("url: %v post err: %v", comment_url, err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("can not get url body.err: %v\n", err)
+	}
+
+	fmt.Println()
+	content := string(body)
+	fmt.Println(content)
+	return content
 }
 
-var forth_param string = "0CoJUm6Qyw8W8jud"
-var commonIV = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
-
-func get_params() (h_encText string) {
-	iv := commonIV
-	first_key := forth_param
-	second_key := 16 * 'F'
+func get_params() (string) {
+	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
+	//commonIV := []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f}
+	commonIV := []byte("0102030405060708")
+	key_text := "0CoJUm6Qyw8W8jud"
+	key_text2 := "FFFFFFFFFFFFFFFF"
 
 	//创建加密算法
-	c, err := aes.NewCipher([]byte(first_key))
+	c, err := aes.NewCipher([]byte(key_text))
 	if err != nil {
-		fmt.Printf("Error: NewCipher(%d bytes) = %s", len(first_key), err)
+		fmt.Printf("Error: NewCipher(%d bytes) = %s", len(key_text), err)
 		os.Exit(-1)
 	}
+
 	//加密字符串
-	cfb := cipher.NewCFBEncrypter(c, iv)
+	cfb := cipher.NewCFBEncrypter(c, commonIV)
 	ciphertext := make([]byte, len(plaintext))
 	cfb.XORKeyStream(ciphertext, plaintext)
 	fmt.Printf("%s=>%x\n", plaintext, ciphertext)
 
-	h_encText := aes.NewCipher(first_param, first_key, iv)
-	h_encText := AES_encrypt(h_encText, second_key, iv)
-	return
+
+	c2, err := aes.NewCipher([]byte(key_text2))
+	if err != nil {
+		fmt.Printf("Error: NewCipher(%d bytes) = %s", len(key_text2), err)
+		os.Exit(-1)
+	}
+
+	//加密字符串
+	cfb2 := cipher.NewCFBEncrypter(c2, commonIV)
+	ciphertext2 := make([]byte, len(string(ciphertext)))
+	cfb2.XORKeyStream(ciphertext2, plaintext)
+	fmt.Printf("%s=>%x\n", plaintext, ciphertext2)
+
+	return string(ciphertext)
 }
 
 //获取歌单id
@@ -179,5 +209,10 @@ func main() {
 	//fmt.Println(a)
 
 	// get song id
-	getSongId()
+	//getSongId()
+
+	//加密参数
+	get_params()
+
+	get_hot_comment("30953009")
 }
