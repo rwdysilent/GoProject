@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"regexp"
+	_"regexp"
 	"sort"
+	_"encoding/hex"
+	"strings"
 )
 
 //func Append(slice, data []byte) []byte {
@@ -241,10 +243,20 @@ func main() {
 	//fmt.Println(zp.Split("pizza", 1))
 	//fmt.Println(zp.Split("pizza", 2))
 
-	str := "/playlist?id=965267769"
-	s := regexp.MustCompile("\\?id=")
-	ans := s.Split(str, 2)
-	m_sli := make([]string, 0)
-	m_sli = append(m_sli, ans[1])
-	fmt.Println(ans[1], m_sli, len(m_sli))
+	//str := "/playlist?id=965267769"
+	//s := regexp.MustCompile("\\?id=")
+	//ans := s.Split(str, 2)
+	//m_sli := make([]string, 0)
+	//m_sli = append(m_sli, ans[1])
+	//fmt.Println(ans[1], m_sli, len(m_sli))
+
+	//ciphertext, _ := hex.DecodeString("f363f3ccdcb12bb883abf484ba77d9cd7d32b5baecb3d4b1b3e0e4beffdb3ded")
+	//fmt.Printf("%x",ciphertext)
+
+	fmt.Println(strings.Repeat("s", 5))
+
+	fmt.Println(string(97))
+
+	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
+	fmt.Println(string(plaintext))
 }
