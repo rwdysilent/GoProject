@@ -15,8 +15,8 @@ headers = {
     'Referer': 'http://music.163.com/'
 }
 
-#first_param = "{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}"
-first_param = "exampleplaintext"
+first_param = "{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}"
+#first_param = "exampleplaintext"
 second_param = "010001"
 first_key = forth_param = "0CoJUm6Qyw8W8jud"
 
@@ -26,13 +26,14 @@ def get_params():
     #first_key = forth_param
     second_key = 16 * 'F'
     h_encText = AES_encrypt(first_param, first_key, iv)
-    #h_encText = AES_encrypt(h_encText, second_key, iv)
+    h_encText = AES_encrypt(h_encText, second_key, iv)
     return h_encText
 
 
 def AES_encrypt(text, key, iv):
     pad = 16 - len(text) % 16
     text = text + pad * chr(pad)
+    print("length text: %s" % len(text))
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     encrypt_text = encryptor.encrypt(text)
     encrypt_text = base64.b64encode(encrypt_text)

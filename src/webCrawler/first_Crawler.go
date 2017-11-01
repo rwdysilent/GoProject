@@ -17,6 +17,7 @@ import (
 	"regexp"
 	"io"
 	_"strings"
+	"strings"
 )
 
 func getUrl(url string) (content string, status int) {
@@ -103,6 +104,8 @@ func get_hot_comment(id string) (string) {
 
 func get_params() (string) {
 	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
+	pad := 16 - len(plaintext) % 16
+	plaintext = []byte(string(plaintext) + strings.Repeat(string(pad), pad))
 	if len(plaintext)%aes.BlockSize != 0 {
 		panic("plaintext is not a multiple of the block size")
 	}
@@ -134,16 +137,17 @@ func get_params() (string) {
 
 func get_params_example(){
 	key := []byte("0CoJUm6Qyw8W8jud")
-	plaintext := []byte("exampleplaintext")
-	//plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
+	//plaintext := []byte("exampleplaintext")
+	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
 
 	// CBC mode works on blocks so plaintexts may need to be padded to the
 	// next whole block. For an example of such padding, see
 	// https://tools.ietf.org/html/rfc5246#section-6.2.3.2. Here we'll
 	// assume that the plaintext is already of the correct length.
 
-	//pad := 16 - len(plaintext) % 16
-    //plaintext = []byte(string(plaintext) + strings.Repeat(string(pad), pad))
+	pad := 16 - len(plaintext) % 16
+    plaintext = []byte(string(plaintext) + strings.Repeat(string(pad), pad))
+	fmt.Println(aes.BlockSize, len(plaintext))
 
 	if len(plaintext)%aes.BlockSize != 0 {
 		panic("plaintext is not a multiple of the block size")
@@ -158,6 +162,7 @@ func get_params_example(){
 	// include it at the beginning of the ciphertext.
 	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
 	iv := ciphertext[:aes.BlockSize]
+	fmt.Println(iv, len(iv))
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		panic(err)
 	}
@@ -250,7 +255,7 @@ func main() {
 	//getSongId()
 
 	//加密参数
-	//get_params()
+	get_params()
 	get_params_example()
 
 	//get_hot_comment("30953009")
