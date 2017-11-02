@@ -1,61 +1,64 @@
-package py
+package main
 
 import (
 	"fmt"
-	"runtime"
-	"testing"
+	"github.com/qiniu/log"
+	"github.com/qiniu/py"
 )
 
-// ------------------------------------------------------------------------------------------
+// -------------------------------------------------------------------
 
 type FooModule struct {
 }
 
-func (r *FooModule) Py_bar(args *Tuple) (ret *Base, err error) {
+func (r *FooModule) Py_bar(args *py.Tuple) (ret *py.Base, err error) {
 	var i int
-	var s []string
-	err = ParseV(args, &i, &s)
+	var s string
+	err = py.Parse(args, &i, &s)
 	if err != nil {
 		return
 	}
 	fmt.Println("call foo.bar:", i, s)
-	return IncNone(), nil
+	return py.IncNone(), nil
 }
 
-// ------------------------------------------------------------------------------------------
-
-type gomoduleCase struct {
-	exp  string
-	name string
-}
-
-var g_gomoduleCases = []gomoduleCase{
-	{
-		`import foo
-foo.bar(1, 'Hello')
-`, "test"},
-}
-
-func TestGoModule(t *testing.T) {
-
-	gomod, err := NewGoModule("foo", "", new(FooModule))
+func (r *FooModule) Py_bar2(args *py.Tuple) (ret *py.Base, err error) {
+	var i int
+	var s []string
+	err = py.ParseV(args, &i, &s)
 	if err != nil {
-		t.Fatal("NewGoModule failed:", err)
+		return
+	}
+	fmt.Println("call foo.bar2:", i, s)
+	return py.IncNone(), nil
+}
+
+// -------------------------------------------------------------------
+
+const pyCode = `
+
+import foo
+foo.bar(1, 'Hello')
+foo.bar2(1, 'Hello', 'world!')
+`
+
+func main() {
+
+	gomod, err := py.NewGoModule("foo", "", new(FooModule))
+	if err != nil {
+		log.Fatal("NewGoModule failed:", err)
 	}
 	defer gomod.Decref()
-	runtime.GC()
-	for _, c := range g_gomoduleCases {
 
-		code, err := Compile(c.exp, "", FileInput)
-		if err != nil {
-			t.Fatal("Compile failed:", err)
-		}
-		defer code.Decref()
-
-		mod, err := ExecCodeModule(c.name, code.Obj())
-		if err != nil {
-			t.Fatal("ExecCodeModule failed:", err)
-		}
-		defer mod.Decref()
+	code, err := py.Compile(pyCode, "", py.FileInput)
+	if err != nil {
+		log.Fatal("Compile failed:", err)
 	}
+	defer code.Decref()
+
+	mod, err := py.ExecCodeModule("test", code.Obj())
+	if err != nil {
+		log.Fatal("ExecCodeModule failed:", err)
+	}
+	defer mod.Decref()
 }

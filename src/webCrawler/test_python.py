@@ -4,29 +4,33 @@ __author__ = 'wupengfei'
 __time__ = '2017/11/2 11:25'
 __function__ = ""
 """
+
 from Crypto.Cipher import AES
-
-import md5
-
-
-def pad(data):
-    length = 16 - (len(data) % 16)
-    data += chr(length)*length
-    return data
+import base64
 
 
-def encrypt(plainText, workingKey):
-    iv = '\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f'
-    plainText = pad(plainText)
-    encDigest = md5.new()
-    encDigest.update(workingKey)
-    enc_cipher = AES.new(encDigest.digest(), AES.MODE_CBC, iv)
-    encryptedText = enc_cipher.encrypt(plainText).encode('hex')
-    return encryptedText
+def get_params():
+    iv = "0102030405060708"
+    # first_key = forth_param
+    second_key = 16 * 'F'
+    h_encText = AES_encrypt(first_param, first_key, iv)
+    h_encText = AES_encrypt(h_encText, second_key, iv)
+    return h_encText
 
 
-if __name__ == "__main__":
-    plainText = "it is a test string"
-    workingKey = "0CoJUm6Qyw8W8jud"
-    s = encrypt(plainText, workingKey)
-    print(s)
+def AES_encrypt(text, key, iv):
+    pad = 16 - len(text) % 16
+    text = text + pad * chr(pad)
+    print("length text: %s" % len(text))
+    encryptor = AES.new(key, AES.MODE_CBC, iv)
+    encrypt_text = encryptor.encrypt(text)
+    encrypt_text = base64.b64encode(encrypt_text)
+    return encrypt_text
+
+
+if __name__ == '__main__':
+    first_param = "{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}"
+    second_param = "010001"
+    first_key = "0CoJUm6Qyw8W8jud"
+    my_pass = get_params()
+    print(my_pass)

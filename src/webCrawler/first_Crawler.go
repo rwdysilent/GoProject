@@ -1,8 +1,8 @@
 package main
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
+	_ "crypto/aes"
+	_ "crypto/cipher"
 	_ "crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -17,7 +17,7 @@ import (
 	"regexp"
 	_ "io"
 	_"strings"
-	"strings"
+	_ "strings"
 )
 
 func getUrl(url string) (content string, status int) {
@@ -102,9 +102,6 @@ func get_hot_comment(id string) (string) {
 	return content
 }
 
-func get_params() (string) {
-
-}
 
 //获取歌单id
 func getSongListId() (slice []string) {
@@ -184,7 +181,7 @@ func main() {
 	//getSongId()
 
 	//加密参数
-	get_params()
+	//get_params()
 
-	//get_hot_comment("30953009")
+	get_hot_comment("30953009")
 }
