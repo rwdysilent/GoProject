@@ -26,7 +26,7 @@ def get_params():
     #first_key = forth_param
     second_key = 16 * 'F'
     h_encText = AES_encrypt(first_param, first_key, iv)
-    h_encText = AES_encrypt(h_encText, second_key, iv)
+    # h_encText = AES_encrypt(h_encText, second_key, iv)
     return h_encText
 
 

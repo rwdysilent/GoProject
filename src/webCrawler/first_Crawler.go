@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
+	_ "crypto/rand"
 	"encoding/json"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
@@ -15,7 +15,7 @@ import (
 	_"os"
 	_ "reflect"
 	"regexp"
-	"io"
+	_ "io"
 	_"strings"
 	"strings"
 )
@@ -103,78 +103,7 @@ func get_hot_comment(id string) (string) {
 }
 
 func get_params() (string) {
-	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
-	pad := 16 - len(plaintext) % 16
-	plaintext = []byte(string(plaintext) + strings.Repeat(string(pad), pad))
-	if len(plaintext)%aes.BlockSize != 0 {
-		panic("plaintext is not a multiple of the block size")
-	}
 
-	commonIV := []byte("0102030405060708")
-	key := []byte("0CoJUm6Qyw8W8jud")
-
-	//创建加密算法
-	c, err := aes.NewCipher(key)
-	if err != nil {
-		fmt.Printf("Error: NewCipher(%d bytes) = %s", len(key), err)
-		panic(err)
-		//os.Exit(-1)
-	}
-
-	//加密字符串
-	//ciphertext := make([]byte, aes.BlockSize+len(plaintext))
-	ciphertext := make([]byte, len(plaintext))
-	//commonIV := ciphertext[:aes.BlockSize]
-
-	cfb := cipher.NewCBCEncrypter(c, commonIV)
-	//cfb.CryptBlocks(ciphertext[aes.BlockSize:], plaintext)
-	cfb.CryptBlocks(ciphertext, plaintext)
-
-	fmt.Printf("%s=>%x\n", plaintext, ciphertext)
-
-	return string(ciphertext)
-}
-
-func get_params_example(){
-	key := []byte("0CoJUm6Qyw8W8jud")
-	//plaintext := []byte("exampleplaintext")
-	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
-
-	// CBC mode works on blocks so plaintexts may need to be padded to the
-	// next whole block. For an example of such padding, see
-	// https://tools.ietf.org/html/rfc5246#section-6.2.3.2. Here we'll
-	// assume that the plaintext is already of the correct length.
-
-	pad := 16 - len(plaintext) % 16
-    plaintext = []byte(string(plaintext) + strings.Repeat(string(pad), pad))
-	fmt.Println(aes.BlockSize, len(plaintext))
-
-	if len(plaintext)%aes.BlockSize != 0 {
-		panic("plaintext is not a multiple of the block size")
-	}
-
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		panic(err)
-	}
-
-	// The IV needs to be unique, but not secure. Therefore it's common to
-	// include it at the beginning of the ciphertext.
-	ciphertext := make([]byte, aes.BlockSize+len(plaintext))
-	iv := ciphertext[:aes.BlockSize]
-	fmt.Println(iv, len(iv))
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		panic(err)
-	}
-
-	mode := cipher.NewCBCEncrypter(block, iv)
-	mode.CryptBlocks(ciphertext[aes.BlockSize:], plaintext)
-
-	// It's important to remember that ciphertexts must be authenticated
-	// (i.e. by using crypto/hmac) as well as being encrypted in order to
-	// be secure.
-
-	fmt.Printf("%x\n", ciphertext)
 }
 
 //获取歌单id
@@ -256,7 +185,6 @@ func main() {
 
 	//加密参数
 	get_params()
-	get_params_example()
 
 	//get_hot_comment("30953009")
 }
