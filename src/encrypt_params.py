@@ -10,10 +10,11 @@ import base64
 
 
 def get_params():
+    plaintext = "{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}"
+    encrypt_key = "0CoJUm6Qyw8W8jud"
     iv = "0102030405060708"
-    # first_key = forth_param
     second_key = 16 * 'F'
-    h_encText = AES_encrypt(first_param, first_key, iv)
+    h_encText = AES_encrypt(plaintext, encrypt_key, iv)
     h_encText = AES_encrypt(h_encText, second_key, iv)
     return h_encText
 
@@ -21,7 +22,6 @@ def get_params():
 def AES_encrypt(text, key, iv):
     pad = 16 - len(text) % 16
     text = text + pad * chr(pad)
-    print("length text: %s" % len(text))
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     encrypt_text = encryptor.encrypt(text)
     encrypt_text = base64.b64encode(encrypt_text)
@@ -29,8 +29,5 @@ def AES_encrypt(text, key, iv):
 
 
 if __name__ == '__main__':
-    first_param = "{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}"
-    second_param = "010001"
-    first_key = "0CoJUm6Qyw8W8jud"
     my_pass = get_params()
-    print(my_pass)
+    # print(my_pass)
