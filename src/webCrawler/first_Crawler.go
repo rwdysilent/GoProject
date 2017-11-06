@@ -78,10 +78,11 @@ func music_163_search(s, m_url string) (content string) {
 
 
 //获取歌单id
-func getSongListId() (slice []string) {
-	m_url := "http://music.163.com/discover/playlist/?order=hot&cat=全部&limit=1&offset=1"
+func getSongListId() (map[string]string) {
+	m_url := "http://music.163.com/discover/playlist/?order=hot&cat=全部&limit=5&offset=1"
 
-	id_slice := make([]string, 0)
+	title_map := make(map[string]string)
+	//id_slice := make([]string, 0)
 	re := regexp.MustCompile("\\?id=")
 
 	doc, err := goquery.NewDocument(m_url)
@@ -89,20 +90,24 @@ func getSongListId() (slice []string) {
 		log.Fatal(err)
 	}
 
+	//fmt.Println(doc.Html())
+
 	// Find the song id items
 	doc.Find(".m-cvrlst li .dec").Each(func(i int, s *goquery.Selection) {
 		link, ok := s.Find("a").Attr("href")
-		//text := s.Find("a").Text()
-		//if ok {
-		//	fmt.Printf("info %d: %s - %s\n", i, link, text)
-		//}
 		if !ok {
 			fmt.Printf("SongListId find err: %v", ok)
 		}
 		song_id := re.Split(link, 2)
-		id_slice = append(id_slice, song_id[1])
+		//id_slice = append(id_slice, song_id[1])
+
+		title, ok := s.Find("a").Attr("title")
+		if !ok {
+			fmt.Printf("SongList title get err: %v", ok)
+		}
+		title_map[title] = song_id[1]
 	})
-	return id_slice
+	return title_map
 }
 
 //获取歌单中歌曲id
@@ -183,7 +188,6 @@ func get_params() (string){
 	if err != nil{
 		fmt.Println(err)
 	}
-	//fmt.Printf("%v\n", string(stdout))
 	return string(stdout)
 }
 
@@ -197,7 +201,7 @@ func commentJsonProcess(comment string){
 	}
 
 	comment_total := commMap["total"].(float64)
-	if comment_total > 1000 {
+	if comment_total > 100000 {
 		//fmt.Println(comment_total)
 		hot_counts := len(commMap["hotComments"].([]interface{}))
 
@@ -205,10 +209,8 @@ func commentJsonProcess(comment string){
 			username := commMap["hotComments"].([]interface{})[i].(map[string]interface{})["user"].(map[string]interface{})["nickname"].(string)
 			comment := commMap["hotComments"].([]interface{})[i].(map[string]interface{})["content"].(string)
 			fmt.Printf("\n%v: %v\n\n", username, comment)
-			//return username, comment
 		}
 	}
-	//return "null", "null"
 }
 
 func MusicCommentSpider(){
@@ -217,17 +219,15 @@ func MusicCommentSpider(){
 		SongInfo := getSongId(string(listId))
 		for name, id := range SongInfo {
 			fmt.Printf("Song name : %v\n", name)
-			//fmt.Printf("%v", id)
 			get_hot_comment(id)
-			//fmt.Printf("Hot comment:\n %v: %v\n\n", user, hotComment)
 		}
 	}
 }
 
 func main() {
-	MusicCommentSpider()
-	//a := getSongListId()
-	//fmt.Println(a)
+	//MusicCommentSpider()
+	a := getSongListId()
+	fmt.Println(a)
 
 	// get song id
 	//getSongId()
@@ -235,5 +235,5 @@ func main() {
 	//加密参数
 	//get_params()
 
-	//get_hot_comment("30953009")
+	//get_hot_comment(30953009)
 }

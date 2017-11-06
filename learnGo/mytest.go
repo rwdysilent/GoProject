@@ -6,7 +6,7 @@ import (
 	_"regexp"
 	"sort"
 	_"encoding/hex"
-	"strings"
+	_"strings"
 )
 
 //func Append(slice, data []byte) []byte {
@@ -231,32 +231,26 @@ func do(work *Work) {
 	panic(fmt.Sprintf("飘了: %s", work))
 }
 
+func loop_map(){
+	test_map := make(map[string]string)
+	test_map["a"] = "1"
+	test_map["b"] = "2"
+
+	for k,v := range test_map{
+		fmt.Println(k,v)
+	}
+}
+
+func loop_slice(){
+	test_slice := make([]string, 0)
+	test_slice = append(test_slice, "1")
+	test_slice = append(test_slice, "2")
+	for k, v := range test_slice{
+		fmt.Println(k,v)
+	}
+}
+
 func main() {
-	//a := regexp.MustCompile("a")
-	//fmt.Println(a.Split("banana", -1))
-	//fmt.Println(a.Split("banana", 0))
-	//fmt.Println(a.Split("banana", 1))
-	//fmt.Println(a.Split("banana", 2))
-	//zp := regexp.MustCompile("z+")
-	//fmt.Println(zp.Split("pizza", -1))
-	//fmt.Println(zp.Split("pizza", 0))
-	//fmt.Println(zp.Split("pizza", 1))
-	//fmt.Println(zp.Split("pizza", 2))
-
-	//str := "/playlist?id=965267769"
-	//s := regexp.MustCompile("\\?id=")
-	//ans := s.Split(str, 2)
-	//m_sli := make([]string, 0)
-	//m_sli = append(m_sli, ans[1])
-	//fmt.Println(ans[1], m_sli, len(m_sli))
-
-	//ciphertext, _ := hex.DecodeString("f363f3ccdcb12bb883abf484ba77d9cd7d32b5baecb3d4b1b3e0e4beffdb3ded")
-	//fmt.Printf("%x",ciphertext)
-
-	fmt.Println(strings.Repeat("s", 5))
-
-	fmt.Println(string(97))
-
-	plaintext := []byte("{rid:\"\", offset:\"0\", total:\"true\", limit:\"2\", csrf_token:\"\"}")
-	fmt.Println(string(plaintext))
+	loop_map()
+	loop_slice()
 }
