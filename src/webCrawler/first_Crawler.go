@@ -215,7 +215,8 @@ func commentJsonProcess(comment string){
 
 func MusicCommentSpider(){
 	SongListId := getSongListId()
-	for _, listId := range SongListId {
+	for title, listId := range SongListId {
+		fmt.Println(title)
 		SongInfo := getSongId(string(listId))
 		for name, id := range SongInfo {
 			fmt.Printf("Song name : %v\n", name)
@@ -225,9 +226,10 @@ func MusicCommentSpider(){
 }
 
 func main() {
-	//MusicCommentSpider()
-	a := getSongListId()
-	fmt.Println(a)
+	MusicCommentSpider()
+
+	//a := getSongListId()
+	//fmt.Println(a)
 
 	// get song id
 	//getSongId()
