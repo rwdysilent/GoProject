@@ -30,4 +30,4 @@ def AES_encrypt(text, key, iv):
 
 if __name__ == '__main__':
     my_pass = get_params()
-    # print(my_pass)
+    print(my_pass)
