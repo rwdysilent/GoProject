@@ -156,7 +156,7 @@ func FloatToString(inputNum float64) string {
 
 //获取歌曲热度评论
 func getHotComment(id float64) {
-	commentUrl := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + FloatToString(id) + "/?csrf_token="
+	commentUrl := "http://music.163.com/weapi/v1/resource/comments/R_SO_4_" + FloatToString(id) + "?csrf_token="
 	fmt.Println(commentUrl)
 	params, err := getParams()
 	fmt.Println(params)
@@ -178,8 +178,8 @@ func getHotComment(id float64) {
 	}
 
 	content := string(body)
-	//fmt.Println(content)
-	commentJsonProcess(content)
+	fmt.Println(content)
+	//commentJsonProcess(content)
 }
 
 //python获取评论url加密参数
@@ -199,7 +199,7 @@ func commentJsonProcess(comment string){
 
 	commJson := []byte(comment)
 	if err := json.Unmarshal(commJson, &commMap); err != nil{
-		panic(err)
+		fmt.Errorf("comment err: %s", err)
 	}
 
 	commentTotal := commMap["total"].(float64)
